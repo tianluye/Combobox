@@ -1,0 +1,150 @@
+<!DOCTYPE HTML>
+<html>
+   <head>
+      <meta charset="UTF-8">
+      <title>Test combobox</title> 	
+      <link href="jquery-ui.css" rel="stylesheet">
+      <link href="combobox.css" rel="stylesheet">
+   </head>
+   <body>
+    <div class="content-box">
+      <div style="width: 240px; height: 32px; margin: 100px auto">
+
+        <input type="text" class="input-combobox" />
+
+      </div>
+
+      <hr>
+
+      <button id="one">设置'徐州'值选中</button>&nbsp;
+      <button id="two">取值</button>&nbsp;
+      <button id="three">获取选中项</button>&nbsp;
+      <button id="four">设置不可用</button>&nbsp;
+      <button id="five">设置可用</button>&nbsp;
+      <button id="six">设置可编辑</button>&nbsp;
+      <button id="seven">设置不可编辑</button>&nbsp;
+      <button id="eight">追加城市淮安、宿迁</button>&nbsp;
+      <button id="nine">移除城市无锡</button>&nbsp;
+      <button id="ten">清空选择内容</button>&nbsp;
+      <button id="eleven">销毁控件</button>&nbsp;
+      <button id="twelve">重新初始化控件</button>&nbsp;
+
+    </div>
+
+      <script type="text/javascript" src="jquery.js"></script>
+      <script src="jquery-ui.js"></script>
+      <script type="text/javascript" src="combobox.js"></script>
+      <script type="text/javascript">
+      var address = $('.input-combobox').combobox({
+          placeholder: 'Please Select',
+          editable: false,
+          dataSource: [{
+              name: '南京', value: '0'
+          }, {
+              name: '徐州', value: '1'
+          }, {
+              name: '苏州', value: '2', disabled: true
+          }, {
+              name: '连云港', value: '3', selected: true
+          }, {
+              name: '常州', value: '4',
+          }, {
+              name: '无锡', value: '5'
+          }],
+          change: function(e, selectedItem) {
+              console.log('--- change event ---');
+              console.log(selectedItem);
+          }
+      });
+      $('#one').on('click', function() {
+          address.combobox('value', '1');
+      });
+      $('#two').on('click', function() {
+          var value = address.combobox('value');
+          console.log(value);
+      });
+      $('#three').on('click', function() {
+          var item = address.combobox('getSelectedItem');
+          console.log(item);
+      });
+      /**
+          调用 disable、enable两个方法，其实是去调用 $.Widget.prototype.disable/enable，去调用 _setOptions，
+          为 this.options新增 disabled属性(disable方法，disabled属性为 true，enable方法，disabled属性为 false)
+      */
+      $('#four').on('click', function() {
+          console.log('--- set disable ---');
+          address.combobox('disable');
+      });
+      $('#five').on('click', function() {
+          console.log('--- set enable ---');
+          address.combobox('enable');
+      });
+
+      $('#six').on('click', function() {
+          console.log('--- set editable true ---');
+          address.combobox('setEditable', true);
+      });
+      $('#seven').on('click', function() {
+          console.log('--- set editable false ---');
+          address.combobox('setEditable', false);
+      });
+      $('#eight').on('click', function() {
+          console.log('--- append to dataSource ---');
+          address.combobox('append', [{
+              name: '淮安',
+              value: '6',
+              selected: true
+          }, {
+              name: '宿迁',
+              value: '7',
+              disabled: true
+          }]);
+      });
+      $('#nine').on('click', function() {
+          console.log('--- remove from dataSource ---');
+          address.combobox('remove', [{
+              name: '无锡',
+              value: '5'
+          }]);
+      });
+      $('#ten').on('click', function() {
+          console.log('--- clear selected item ---');
+          address.combobox('clear');
+      });
+      /**
+          调用 destroy方法，其实是去调用 $.Widget.prototype.disable方法，这个方法里面调用了 _destroy，
+          也就是 $.noop，所以在插件里面重新定义 _destroy方法，实现自定义的销毁动作
+      */
+      $('#eleven').on('click', function() {
+          console.log('--- destroy ---');
+          address.combobox('destroy');
+      });
+      $('#twelve').on('click', function() {
+          console.log('--- init again ---');
+          address.combobox({
+              placeholder: 'Please Select',
+              editable: false,
+              dataSource: [{
+                  name: '南京', value: '0'
+              }, {
+                  name: '徐州', value: '1'
+              }, {
+                  name: '苏州', value: '2', disabled: true
+              }, {
+                  name: '连云港', value: '3', selected: true
+              }, {
+                  name: '常州', value: '4',
+              }, {
+                  name: '无锡', value: '5'
+              }],
+              change: function(e, selectedItem) {
+                  console.log('--- change event ---');
+                  console.log(selectedItem);
+              }
+          });
+      });
+      </script>
+
+   </body>
+	
+</html>
